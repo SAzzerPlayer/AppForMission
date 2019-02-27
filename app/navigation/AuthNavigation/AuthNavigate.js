@@ -1,10 +1,10 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation';
 import LoginScreen from './LoginScreen';
-import RegisterScreen from './RegisterScreen'
+import RegisterScreen from './RegisterScreen';
 
 // Навигация экранов авторизации
-const StartNavigate = createStackNavigator({
+const AuthNavigate = createStackNavigator({
     Login: LoginScreen,
     Register: RegisterScreen
     },
@@ -12,4 +12,4 @@ const StartNavigate = createStackNavigator({
         initialRouteName: 'Login'
     });
 
-export default StartNavigate;
+export default AuthNavigate;

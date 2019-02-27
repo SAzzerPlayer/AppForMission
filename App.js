@@ -8,14 +8,12 @@
  */
 
 import React, {Component} from 'react';
-//import {AppRegistry,StyleSheet, Button,Text, View} from 'react-native';
 import {createAppContainer} from 'react-navigation';
-import MainNavigate from './app/navigation/MainNavigate';
+import MainNavigation from './app/navigation/MainNavigation';
 ///Все экраны приложения
 
-const App = createAppContainer(MainNavigate);
+const App = createAppContainer(MainNavigation);
 
 export default App;
-
 
 

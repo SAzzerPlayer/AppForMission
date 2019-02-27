@@ -1,7 +1,9 @@
-import React,{Component} from 'react'
-import {View,Text,StyleSheet,Image} from 'react-native'
-import {createBottomTabNavigator,createSwitchNavigator} from 'react-navigation'
-import StartNavigate from '../AuthNavigation/StartNavigate'
+import React,{Component} from 'react';
+import {createBottomTabNavigator} from 'react-navigation';
+import LikesScreen from './LikesScreen';
+import NewsScreen from './NewsScreen';
+import ProfileScreen from './ProfileScreen';
+import WallScreen from './WallScreen';
 /*
 * Основная навигация приложения. Всего 4 экрана:
 * Profile, Likes, News, Wall .
@@ -16,7 +18,6 @@ export default UserNavigate = createBottomTabNavigator({
     },
     {
         initialRouteName: "Wall"
-
     });
 
 
