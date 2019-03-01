@@ -1,6 +1,8 @@
 import React,{Component} from 'react';
-import {Alert,View,Text,TextInput,AsyncStorage, Button, ImageBackground} from 'react-native';
+import {Alert,View,Text,TextInput,AsyncStorage, ImageBackground} from 'react-native';
+import {Button, ThemeProvider,Divider} from 'react-native-elements';
 import styles from './Styles';
+import theme from './Theme';
 
 export default class RegisterScreen extends Component{
     //Сохранить пользователя в базу данных
@@ -66,6 +68,7 @@ export default class RegisterScreen extends Component{
                     <View style={{
                         flex:3
                     }}>
+                        <Divider style={styles.divider}/>
                 <View style={{flex:1}}>
                     <Text style={styles.textInfo}>
                         NickName:
@@ -76,6 +79,7 @@ export default class RegisterScreen extends Component{
                         onChangeText={(nick)=>this.setState({nickname:nick})}
                         value={this.state.nickname}/>
                 </View>
+                        <Divider style={styles.divider}/>
                 <View style={{flex:1, color:'white'}}>
                     <Text style={styles.textInfo}>
                         Password:
@@ -86,6 +90,7 @@ export default class RegisterScreen extends Component{
                         onChangeText={(pass)=>this.setState({password:pass})}
                         value={this.state.password}/>
                 </View>
+                        <Divider style={styles.divider}/>
                 <View style={{flex:1}}>
                     <Text style={styles.textInfo}>
                         Confirm passWord:
@@ -96,16 +101,19 @@ export default class RegisterScreen extends Component{
                         onChangeText={(pass)=>this.setState({rPassword:pass})}
                         value={this.state.rPassword}/>
                 </View>
+                        <Divider style={styles.divider}/>
                     </View>
                 <View style={{flex:2}}>
                     <Text style={styles.textInfo}>To join us:</Text>
-                    <Button
+                    <ThemeProvider theme={theme}>
+                        <Button
                         style={styles.button}
                         onPress={()=>{
                             this.CreateUser(this.state);
                         }}
                         title="Create"
-                    />
+                        />
+                    </ThemeProvider>
                 </View>
                 </ImageBackground>
             </View>

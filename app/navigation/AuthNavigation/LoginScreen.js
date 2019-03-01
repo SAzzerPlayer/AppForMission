@@ -1,6 +1,7 @@
 
 import React, {Component} from 'react';
 import {Alert,Text,View,Button,AsyncStorage,TextInput,ImageBackground} from 'react-native';
+import {Divider} from 'react-native-elements';
 import styles from './Styles';
 
 
@@ -62,6 +63,7 @@ export default class LoginScreen extends Component{
                         Please log in our app:
                     </Text>
                 </View>
+                    <Divider style={styles.divider}/>
                 <View style={{flex:1}}>
                     <Text style={styles.textInfo}>
                         Login:
@@ -72,6 +74,7 @@ export default class LoginScreen extends Component{
                         onChangeText={(nick)=>this.setState({nickname:nick})}
                         value={this.state.nickname}/>
                 </View>
+                    <Divider style={styles.divider}/>
                 <View style={{flex:1}}>
                     <Text style={styles.textInfo}>
                         PassWord:
@@ -79,11 +82,11 @@ export default class LoginScreen extends Component{
                     <TextInput
                         style={styles.inputField}
                         placeHolder={"1"}
-                        autoComplete={'password'}
                         onChangeText={
                             (password)=>this.setState({passwordReal:password})}
-                        value={this.state.passwordFake}/>
+                        value={this.state.passwordReal}/>
                 </View>
+                    <Divider style={styles.divider}/>
                 <View style={{flex:1}}>
                     <Button
                         style={styles.button}

@@ -3,22 +3,18 @@ import {StyleSheet} from 'react-native';
 export default styles = StyleSheet.create({
     profileView:{
         flex:1,
-        alignItems:"center",
-        backgroundColor:'grey'
+        alignItems:"center"
     },
     likesView:{
         flex:1,
-        alignItems:"center",
-        backgroundColor:'blue'
+        alignItems:"center"
     },
     newsView:{
-        flex:1,
-        alignItems:"center",
-        backgroundColor:'red'
+        flex:2,
+        alignItems:"center"
     },
     wallView:{
         flex:1,
-        alignItems:"center",
-        backgroundColor:'green'
+        alignItems:"center"
     }
 });

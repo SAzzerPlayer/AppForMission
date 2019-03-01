@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
 import {createBottomTabNavigator} from 'react-navigation';
-import LikesScreen from './LikesScreen';
-import NewsScreen from './NewsScreen';
-import ProfileScreen from './ProfileScreen';
-import WallScreen from './WallScreen';
+import LikesScreen from './LikesScreen/LikesScreen';
+import NewsScreen from './NewsScreen/NewsScreen';
+import ProfileScreen from './ProfileScreen/ProfileScreen';
+import WallScreen from './WallScreen/WallScreen';
 /*
 * Основная навигация приложения. Всего 4 экрана:
 * Profile, Likes, News, Wall .

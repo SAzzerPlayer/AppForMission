@@ -6,6 +6,10 @@
  * @flow
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
+/*
+*
+* NOT ENDED JSON FILE OF USER AND DEVICES OF USER INTERFACES
+* */
 
 import React, {Component} from 'react';
 import {createAppContainer} from 'react-navigation';

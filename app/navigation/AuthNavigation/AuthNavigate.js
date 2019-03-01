@@ -9,6 +9,14 @@ const AuthNavigate = createStackNavigator({
     Register: RegisterScreen
     },
     {
+        headerMode: 'float',
+        navigationOptions:{
+            headerStyle:{
+                backgroundColor:"#333555"
+            },
+            titleColor:'black',
+            title: 'Authentication'
+        },
         initialRouteName: 'Login'
     });
 

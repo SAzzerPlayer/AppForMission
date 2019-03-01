@@ -12,7 +12,8 @@ export default styles = StyleSheet.create(
         },
         textWelcome:{
             fontSize:18,
-            color: "#fffafa"
+            color: "#fffafa",
+            justifyContent: "space-around"
         },
         textInfo: {
             fontSize: 14,
@@ -26,6 +27,11 @@ export default styles = StyleSheet.create(
             borderWidth: 1,
             borderColor:'white',
             opacity:0.5
+        },
+        divider:{
+            backgroundColor:'white',
+            opacity:0.55,
+            height:1
         }
     }
 );
