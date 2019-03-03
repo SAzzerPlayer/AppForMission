@@ -11,9 +11,9 @@
 * NOT ENDED JSON FILE OF USER AND DEVICES OF USER INTERFACES
 * */
 
-import React, {Component} from 'react';
+import React from 'react';
 import {createAppContainer} from 'react-navigation';
-import MainNavigation from './app/navigation/MainNavigation';
+import MainNavigation from './app/MainNavigation';
 ///Все экраны приложения
 
 const App = createAppContainer(MainNavigation);
