@@ -7,9 +7,9 @@ export default class RegisterScreen extends React.Component{
     _SaveUser = async ()=>{
         try{
             let newUser = new User(
-                this.state.nickname,
-                this.state.password,
-                Array()
+                nickname=this.state.nickname,
+                password=this.state.password,
+                email=this.state.email
             );
             await AsyncStorage.setItem('user:' + this.state.nickname, JSON.stringify(
                 newUser.getObject()
@@ -25,9 +25,9 @@ export default class RegisterScreen extends React.Component{
     _SaveCurrentUser = async ()=>{
         try{
             let curUser = new User(
-                this.state.nickname,
-                this.state.password,
-                Array());
+                nickname=this.state.nickname,
+                password=this.state.password,
+                email=this.state.email);
             await AsyncStorage.setItem('currentUser:',JSON.stringify(
                 curUser.getObject()
             ));
@@ -40,11 +40,15 @@ export default class RegisterScreen extends React.Component{
     CreateUser(params){
         let regName = /^[a-zA-Z'][a-zA-Z-' ]+[a-zA-Z']?$/;
         let regPass = /^[a-zA-Z0-9'][a-zA-Z0-9' ]+[a-zA-Z0-9']?$/;
+        let regEmail= /^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/;
         if(params['nickname'].match(regName) ==null){
-            Alert.alert('Wrong view of name');
+            Alert.alert('Invalid name format'+params['nickname']+'/');
         }
-        else if(params['nickname'].match(regPass)==null){
-            Alert.alert('Wrong view of password')
+        else if(params['password'].match(regPass)==null){
+            Alert.alert('Invalid password format')
+        }
+        else if(params['email'].match(regEmail)==null){
+            Alert.alert('invalid E-mail address format')
         }
         else{
             if(params['password'] == params['rPassword']){
@@ -58,8 +62,8 @@ export default class RegisterScreen extends React.Component{
     }
     constructor(props){
         super(props);
-        this.state = {nickname:'',password:'',rPassword:'',email:''};
         this.CreateUser=this.CreateUser.bind(this);
+        this.state = {nickname:'',password:'',rPassword:'',email:''};
     }
     render(){
         return(
@@ -84,36 +88,34 @@ export default class RegisterScreen extends React.Component{
                                     <Image style={styles.MainInputImage} source={require('./materials/user.png')}/>
                                     <TextInput
                                         style={styles.MainInputText}
-                                        placeholder={'Username...'}
-                                        OnChangeText={(nick)=>this.setState({nickname:nick})}
-                                        value={this.state.nickname}/>
+                                        value={this.state.nickname}
+                                        onChangeText={(pass)=>this.setState({nickname:pass})}
+                                        placeholder={'Nickname...'}/>
+
                                 </View>
                                 <View style={styles.MainInputContain}>
                                     <Image style={styles.MainInputImage} source={require('./materials/email.png')}/>
                                     <TextInput
                                         style={styles.MainInputText}
-                                        placeholder={'E-mail address...'}
-                                        OnChangeText={(address)=>this.setState({email:address})}
                                         value={this.state.email}
-                                    />
+                                        onChangeText={(address)=>this.setState({email:address})}
+                                        placeholder={'E-mail address...'}/>
                                 </View>
                                 <View style={styles.MainInputContain}>
                                     <Image style={styles.MainInputImage} source={require('./materials/password.png')}/>
                                     <TextInput
                                         style={styles.MainInputText}
-                                        placeholder={'Password...'}
-                                        OnChangeText={(pass)=>this.setState({password:pass})}
                                         value={this.state.password}
-                                    />
+                                        onChangeText={(pass)=>this.setState({password:pass})}
+                                        placeholder={'Password...'}/>
                                 </View>
                                 <View style={styles.MainInputContain}>
                                     <Image style={styles.MainInputImage} source={require('./materials/password.png')}/>
                                     <TextInput
                                         style={styles.MainInputText}
-                                        placeholder={'Re-password...'}
-                                        OnChangeText={(pass)=>this.setState({rPassword:pass})}
                                         value={this.state.rPassword}
-                                    />
+                                        onChangeText={(pass)=>this.setState({rPassword:pass})}
+                                        placeholder={'Re-password...'}/>
                                 </View>
                             </View>
                             <View style={styles.MiddleBottomContain}>

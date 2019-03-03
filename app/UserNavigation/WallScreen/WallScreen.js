@@ -21,10 +21,10 @@ export default class WallScreen extends React.Component {
                     rightComponent={{icon: 'settings', color:'#fff'}}
                 />
                 <ScrollView style={styles.Scroll}>
-                    <ImagePost/>
-                    <ImagePost/>
-                    <ImagePost/>
-                    <ImagePost/>
+                    <ImagePost isCurrentUser={false}/>
+                    <ImagePost isCurrentUser={false}/>
+                    <ImagePost isCurrentUser={false}/>
+                    <ImagePost isCurrentUser={false}/>
                 </ScrollView>
                 </ImageBackground>
         )

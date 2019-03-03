@@ -7,17 +7,10 @@ export default class LoginScreen extends React.Component{
     SearchUser = async () => {
         try{
             const value = JSON.parse(await AsyncStorage.getItem('user:'+this.state.nickname));
-            if(value !== null && this.state.password == value['pass'] ) {
-                Alert.alert('Successfull!');
-                let logUser= new User(
-                    value['nickname'],
-                    value['password'],
-                    value['posts']
+            if(value !== null && this.state.password == value['password'] ) {
+                await AsyncStorage.mergeItem('currentUser:', JSON.stringify(value)
                 );
-                await AsyncStorage.mergeItem('currentUser:', JSON.stringify(
-                    logUser.getObject()
-                    )
-                );
+                Alert.alert(value.nickname);
                 this.props.navigation.navigate('User');
             }
             else Alert.alert('Sorry, but you enter a wrong datas. Please repeat that.');
@@ -32,12 +25,11 @@ export default class LoginScreen extends React.Component{
         let password = this.state.password;
         let regName = /^[a-zA-Z'][a-zA-Z-' ]+[a-zA-Z']?$/;
         let regPass = /^[a-zA-Z0-9'][a-zA-Z0-9' ]+[a-zA-Z0-9']?$/;
-
         if(nickname.match(regName)==null){
-            Alert.alert('Недопустимый формат имени');
+            Alert.alert('Invalid name format');
         }
         else if(password.match(regPass)==null){
-            Alert.alert('Недопустимый формат пароля');
+            Alert.alert('Invalid password format');
         }
         else this.SearchUser();
 

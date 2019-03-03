@@ -16,17 +16,18 @@ export default class ImagePost extends React.Component{
                             @UserName
                         </Text>
                     </View>
+                    {( !this.props.isCurrentUser &&
                     <View style={styles.InfoIconJoinContain}>
                         <Image style={styles.InfoIconJoinImage} source={require('./materials/join.png')}/>
-                    </View>
-                    <View style={styles.InfoJoinContain}>
+                    </View>)}
+                    {(!this.props.isCurrentUser &&<View style={styles.InfoJoinContain}>
                         <Text style={styles.InfoJoinText}>
                             Join
                         </Text>
-                    </View>
+                    </View> )}
                 </View>
                 <View style={styles.PostImageContain}>
-                    <Image style={styles.PostImage} source={require('./materials/image.jpg')}/>
+                    <Image style={styles.PostImage} source={require('./materials/image-2.jpg')}/>
                 </View>
                 <View style={styles.PostBottomContain}>
                     <View style={styles.PostBottomLeftContain}>

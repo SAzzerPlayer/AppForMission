@@ -16,7 +16,7 @@ export default class Notify extends React.Component{
                     <Text style={styles.NotifyText}>@Username likes your post:</Text>
                 </View>
                 <View style={styles.PostImageContain}>
-                    <Image style={styles.PostImage} source={require('./materials/image.jpg')}/>
+                    <Image style={styles.PostImage} source={require('./materials/image-2.jpg')}/>
                 </View>
             </View>
         );

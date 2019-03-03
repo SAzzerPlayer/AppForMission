@@ -20,7 +20,8 @@ export default class User{
             email:this.email,
             subscribers: this.subscribers,
             subscribe:this.subscribe,
-            articles:this.articles
+            articles:this.articles,
+            notifications:this.notifications
         };
     }
 }
