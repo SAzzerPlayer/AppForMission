@@ -1,37 +1,64 @@
 import React from 'react';
-import {AppRegistry,View,Text,Image,TouchableHighlight,TouchableWithoutFeedback} from 'react-native';
+import {Alert,AsyncStorage,AppRegistry,View,Text,Image,TouchableHighlight,TouchableWithoutFeedback} from 'react-native';
 import styles from './Styles';
 
 export default class ImagePost extends React.Component{
-    static navigationOptions={
-        title:'AddPost'
-    };
     constructor(props){
         super(props);
-        this.state={};
     }
+    _SaveData = async()=>{
+        try{
+            await AsyncStorage.setItem('user:'+this.props.userData.nickname,
+                JSON.stringify(this.props.userData));
+            await AsyncStorage.setItem('currentUser:',JSON.stringify(this.props.userData));
+        }
+        catch(exception){
+            Alert.alert('Wrong save post! ' + exception)
+        }
+    };
+    _DeletingProcess=()=>{
+        Alert.alert(
+            'Delete the post',
+            'Are you sure?',
+            [
+                {text:'No',onPress:()=>{}},
+                {text:'Yes',onPress:()=>{
+                    this.props.userData.posts.splice(this.props.index,1);
+                    this.props.extraData.setState({userData:this.props.userData});
+                    this._SaveData();
+                    }},
+
+            ],
+            {cancelable:false}
+        )
+    };
     render(){
         return(
             <View style={styles.PostUserContain}>
                 <View style={styles.InfoUserContain}>
-                    <Image style={styles.AvatarUserImage} source={require('./materials/avatar.png')}/>
+                    <Image style={styles.AvatarUserImage} source={{uri:this.props.userData.avatar}}/>
                     <View style={styles.InfoUserNickNameContain}>
                         <Text style={styles.InfoUserNickNameText}>
-                            @UserName
+                            {this.props.userData.nickname}
                         </Text>
                     </View>
                     {( !this.props.isCurrentUser &&
                     <View style={styles.InfoIconJoinContain}>
                         <Image style={styles.InfoIconJoinImage} source={require('./materials/join.png')}/>
                     </View>)}
-                    {(!this.props.isCurrentUser &&<View style={styles.InfoJoinContain}>
-                        <Text style={styles.InfoJoinText}>
+                    <View style={styles.InfoJoinContain}>
+                        {(!this.props.isCurrentUser &&<Text style={styles.InfoJoinText}>
                             Join
-                        </Text>
-                    </View> )}
+                        </Text>)}
+                        {(this.props.isDeletingPost &&
+                                <TouchableHighlight onPress={this._DeletingProcess}>
+                                    <Image style={{width:32,height:32}} source={require('./materials/close.png')}/>
+                                </TouchableHighlight>
+                        )}
+                    </View>
                 </View>
                 <View style={styles.PostImageContain}>
-                    <Image style={styles.PostImage} source={require('./materials/image-2.jpg')}/>
+                    <Image style={styles.PostImage} source={{uri:this.props.data.image}}/>
                 </View>
                 <View style={styles.PostBottomContain}>
                     <View style={styles.PostBottomLeftContain}>
@@ -42,14 +69,14 @@ export default class ImagePost extends React.Component{
                         </View>
                         <View style={styles.PostBottomAmmoLikesContain}>
                             <Text style={styles.PostBottomAmmoLikesText}>
-                                947k likes
+                                {this.props.data.likes}
                             </Text>
                         </View>
                     </View>
                     <View style={styles.PostBottomRightContain}>
                         <TouchableWithoutFeedback style={styles.PostBottomRightTouch}>
                             <Text style={styles.PostBottomRightText}>
-                                Something about this...
+                                {this.props.data.text}
                             </Text>
                         </TouchableWithoutFeedback>
 

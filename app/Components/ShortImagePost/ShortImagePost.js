@@ -8,9 +8,9 @@ export default class ShortImagePost extends React.Component{
     }
     render(){
         return(
-            <TouchableHighLight>
-                <Image style={styles.ShortPostImage} source={require('./materials/image.jpg')}/>
-            </TouchableHighLight>
+            <TouchableHighlight>
+                <Image style={styles.ShortPostImage} source={{uri:this.props.data.image}}/>
+            </TouchableHighlight>
         );
     }
 }

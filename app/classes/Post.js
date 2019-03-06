@@ -18,7 +18,7 @@ export default class POST{
         this.text=obj.text;
         this.user=obj.user;
     }
-    toObject(){
+    getObject(){
         return {
             id:this.id,
             image:this.image,

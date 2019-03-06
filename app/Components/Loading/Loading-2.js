@@ -8,7 +8,8 @@ export default class Loading2 extends React.Component{
     Animated.timing(this.state.count,
         {
             toValue:180,
-            duration:100
+            duration:1500,
+            step:1
         }
     )
     }

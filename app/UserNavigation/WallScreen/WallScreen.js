@@ -7,7 +7,8 @@ import ImagePost from '../../Components/ImagePost/ImagePost';
 export default class WallScreen extends React.Component {
 
     static navigationOptions = {
-        title: 'Wall'
+        title: 'Wall',
+        header: null
     };
 
     render(){

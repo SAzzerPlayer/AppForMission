@@ -6,13 +6,12 @@ import User from "../../classes/User";
 export default class RegisterScreen extends React.Component{
     _SaveUser = async ()=>{
         try{
-            let newUser = new User(
-                nickname=this.state.nickname,
-                password=this.state.password,
-                email=this.state.email
-            );
+            let curUser = new User();
+            curUser.nickname=this.state.nickname;
+            curUser.password=this.state.password;
+            curUser.email=this.state.email;
             await AsyncStorage.setItem('user:' + this.state.nickname, JSON.stringify(
-                newUser.getObject()
+                curUser.getObject()
                 )
             );
         }
@@ -24,10 +23,10 @@ export default class RegisterScreen extends React.Component{
 
     _SaveCurrentUser = async ()=>{
         try{
-            let curUser = new User(
-                nickname=this.state.nickname,
-                password=this.state.password,
-                email=this.state.email);
+            let curUser = new User();
+            curUser.nickname=this.state.nickname;
+            curUser.password=this.state.password;
+            curUser.email=this.state.email;
             await AsyncStorage.setItem('currentUser:',JSON.stringify(
                 curUser.getObject()
             ));

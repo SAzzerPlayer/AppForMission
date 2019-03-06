@@ -11,7 +11,8 @@ import NewsPost from '../../Components/NewsPost/NewsPost';
 export default class NewsScreen extends React.Component {
 
     static navigationOptions = {
-        title: 'News'
+        title: 'News',
+        header: null
     };
 
     render(){

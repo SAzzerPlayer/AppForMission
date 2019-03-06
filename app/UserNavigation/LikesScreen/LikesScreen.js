@@ -6,7 +6,8 @@ import Notify from '../../Components/Notify/Notify';
 export default class LikesScreen extends React.Component {
 
     static navigationOptions = {
-        title: 'Likes'
+        title: 'Likes',
+        header: null
     };
 
     render(){
