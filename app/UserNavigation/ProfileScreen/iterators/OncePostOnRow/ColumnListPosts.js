@@ -15,7 +15,7 @@ export default class ColumnListPosts extends React.Component{
     render(){
         return(
             <FlatList
-            data={this.props.userData.posts.slice().reverse()}
+            data={this.props.userData.posts}
             renderItem={({item})=>(
                 <ImagePost
                     data={item}

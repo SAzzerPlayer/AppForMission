@@ -1,0 +1,12 @@
+{
+  "posts":[
+    {
+      "id":0,
+      "key":"abcd",
+      "image":"",
+      "text":"hello",
+      "likes":[]
+    }
+  ],
+  "amount": 1
+}

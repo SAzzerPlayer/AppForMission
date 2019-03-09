@@ -1,6 +1,6 @@
 
 export default class User{
-    constructor(nickname='',password=0,posts=Array(),email='',avatar='',subscribers=Array(),subscribe=Array(),articles=Array(),notifications=Array()){
+    constructor(nickname='',password=0,posts=Array(),email='',avatar='',subscribers=Array(),subscribe=Array(),articles=Array(),notifications=Array(),history=Array()){
         this.avatar=avatar;
         this.nickname = nickname;
         this.password = password;
@@ -10,6 +10,7 @@ export default class User{
         this.subscribe=subscribe;
         this.articles=articles;
         this.notifications=notifications;
+        this.history=history;
     }
     getObject(){
         return {
@@ -21,7 +22,8 @@ export default class User{
             subscribers: this.subscribers,
             subscribe:this.subscribe,
             articles:this.articles,
-            notifications:this.notifications
+            notifications:this.notifications,
+            history:this.history
         };
     }
 }

@@ -9,12 +9,22 @@ export default class AddImagePost extends React.Component{
         post.image=this.state.url;
         post.text=this.state.text;
         post.user=this.props.userData.nickname;
-        post.id=this.props.userData.posts.length;
+        post.likes=0;
+        post.id=Date.now();
         this.props.userData.posts.push(post.getObject());
         try{
-        await AsyncStorage.setItem('user:'+this.props.userData.nickname,
+            await AsyncStorage.setItem('user:'+this.props.userData.nickname,
             JSON.stringify(this.props.userData));
             await AsyncStorage.setItem('currentUser:',JSON.stringify(this.props.userData));
+            let global = JSON.parse(await AsyncStorage.getItem('global:'));
+            if(global==null){
+                global={posts:[]};
+            }
+            else if(global.posts === undefined){
+                global.posts=Array();
+            }
+            global['posts'].push(post.getObject());
+            await AsyncStorage.setItem('global:',JSON.stringify(global));
         }
         catch(exception){
             Alert.alert('Wrong save post! ' + exception)

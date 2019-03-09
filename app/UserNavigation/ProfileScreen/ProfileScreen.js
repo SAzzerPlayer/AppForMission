@@ -1,5 +1,5 @@
 import React from 'react';
-import {AsyncStorage,View,Text,ImageBackground,ScrollView,Image,TouchableHighlight,Switch} from 'react-native';
+import {AsyncStorage,Alert,View,Text,ImageBackground,ScrollView,Image,TouchableHighlight,Switch} from 'react-native';
 import {Header,Icon,Overlay} from 'react-native-elements';
 import ColumnListPosts from './iterators/OncePostOnRow/ColumnListPosts';
 import TwiceColumnListPost from './iterators/TwicePostOnRow/TwiceColumnListPost';
@@ -25,8 +25,24 @@ export default class ProfileScreen extends React.Component {
         super(props);
         this.state = { userData:{},isMultiplyPosts:false,isLoaded:false,isDeletingPost:false};
         this._LoadUserData = this._LoadUserData.bind(this);
+
         this._LoadUserData();
     }
+    _LogOut=()=>{
+        Alert.alert(
+            'Log out from the app',
+            'Are you sure?',
+            [
+                {text:'No',onPress:()=>{}},
+                {text:'Yes',onPress:async()=>{
+                        await AsyncStorage.setItem('currentUser:',JSON.stringify({}));
+                        this.props.navigation.navigate('Start');
+                    }},
+
+            ],
+            {cancelable:false}
+        )
+    };
 
     render(){
         if(this.state.isLoaded) {
@@ -37,7 +53,8 @@ export default class ProfileScreen extends React.Component {
                     <Header
                         leftComponent={{icon: 'menu', color: '#fff'}}
                         centerComponent={{text: 'Profile', style: {color: '#fff'}}}
-                        rightComponent={{icon: 'settings', color: '#fff'}}
+                        //rightComponent={{icon: 'settings', color: '#fff'}}
+                        rightComponent={{icon: 'exit-to-app', color: '#fff',onPress:this._LogOut}}
                     />
                     <View style={styles.ProfUserContain}>
                         <View style={styles.AvatarContain}>
@@ -52,7 +69,14 @@ export default class ProfileScreen extends React.Component {
                                     <Text style={styles.NickNameText}>{this.state.userData['nickname']}</Text>
                                 </View>
                                 <View style={styles.EditProfileContain}>
-                                    <Image style={styles.EditProfileImage} source={require('./materials/edit.png')}/>
+                                    <TouchableHighlight onPress={()=>{
+                                        this.props.navigation.navigate('EditProfile');
+                                        this.setState({isLoaded:false});
+                                        this.setState({isLoaded:true});
+
+                                    }}>
+                                        <Image style={styles.EditProfileImage} source={require('./materials/edit.png')}/>
+                                    </TouchableHighlight>
                                 </View>
                             </View>
                             <View style={styles.StatisticsUserContain}>

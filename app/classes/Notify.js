@@ -1,6 +1,7 @@
 
 export default class Notify{
-    constructor(fromUser='',post='',type='',date=''){
+    constructor(id=Date.now(),fromUser='',post='',type='',date=''){
+        this.id = id;
         this.fromUser=fromUser;
         this.post=post;
         this.type=type;
@@ -8,6 +9,7 @@ export default class Notify{
     }
     getObject(){
         return {
+            id:this.id,
             fromUser:this.fromUser,
             post:this.post,
             type:this.type,

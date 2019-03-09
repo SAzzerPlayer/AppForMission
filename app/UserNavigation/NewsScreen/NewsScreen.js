@@ -23,7 +23,7 @@ export default class NewsScreen extends React.Component {
                 <Header
                     leftComponent={{icon: 'menu',color:'#fff'}}
                     centerComponent={{text: 'News', style:{color:'#fff'}}}
-                    rightComponent={{icon: 'settings', color:'#fff'}}
+                    //rightComponent={{icon: 'settings', color:'#fff'}}
                 />
                 <View style={{height:24}}>
                 <Picker/>

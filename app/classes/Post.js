@@ -27,5 +27,8 @@ export default class POST{
             user:this.user
         }
     }
+    toString(){
+        return this.id+' '+this.image+' '+this.likes+' '+this.text+' '+this.user;
+    }
 
 }
