@@ -11,38 +11,77 @@ export default class EditProfileScreen extends React.Component{
         let tempData = JSON.parse(await AsyncStorage.getItem('currentUser:'));
         this.setState({userData:tempData, isLoaded:true});
     };
-
-    _SaveData = async () => {
-        this.setState({userData:this.state.userData});
-        try {
-            await AsyncStorage.setItem('user:' + this.state.nickname, JSON.stringify(this.state.userData));
-            await AsyncStorage.setItem('currentUser:', JSON.stringify(this.state.userData));
-        }
-        catch(except){
-            Alert.alert(except);
-        }
+    _UpdateUserData = async () => {
+            let data = Object();
+            await fetch("http://10.0.2.2:3000/users?username="+this.state.userData.username)
+                .then((response)=>{ return response.json().then((responseJson)=>{
+                    data=responseJson;
+                })})
+                .catch((error)=>{
+                    Alert.alert("Ooops "+error);
+                    return false;
+                });
+            this.setState({userData:data});
+            await AsyncStorage.setItem("currentUser:",JSON.stringify(data));
     };
-
+    _PostDataAvatar = async () => {
+        await fetch('http://10.0.2.2:3000/users/change', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: this.state.userData.username,
+                avatar: this.state.url
+            }),
+        });
+    };
     _CheckURL = ()=>{
         let regURL = /\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i;
         if(this.state.url.match(regURL)==null){
             Alert.alert('Invalid type of url!');
         }
         else {
-            this.state.userData.avatar=this.state.url;
-            this.setState({userData:this.state.userData});
-            this._SaveData();
+            this._PostDataAvatar();
+            this._UpdateUserData();
         }
     };
-    _CheckEmail=()=>{
+    _PostDataEmail = async () => {
+        await fetch('http://10.0.2.2:3000/users/change', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: this.state.userData.username,
+                email: this.state.email
+            }),
+        });
+    };
+    _CheckEmail= async () => {
         let regEmail= /^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/;
         if(this.state.email.match(regEmail)==null){
             Alert.alert('Invalid type of email!');
         }
         else {
-            this.state.userData.email=this.state.email;
-            this._SaveData();
+            this._PostDataEmail();
+            this._UpdateUserData();
         }
+    };
+    _PostDataPassword= async () => {
+        await fetch('http://10.0.2.2:3000/users/new', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: this.state.userData.username,
+                password: this.state.password,
+            }),
+        });
     };
     _CheckPassword=()=>{
         let regPass = /^[a-zA-Z0-9'][a-zA-Z0-9' ]+[a-zA-Z0-9']?$/;
@@ -58,8 +97,8 @@ export default class EditProfileScreen extends React.Component{
                 Alert.alert('Wrong old password!');
             }
             else{
-                this.state.userData.password=this.state.newPass;
-                this._SaveData();
+                this._PostDataPassword();
+                this._UpdateUserData();
             }
         }
     };
@@ -75,7 +114,7 @@ export default class EditProfileScreen extends React.Component{
             reNewPass:''
         };
         this._LoadData = this._LoadData.bind(this);
-        this._SaveData = this._SaveData.bind(this);
+        this._UpdateUserData = this._UpdateUserData.bind(this);
         this._LoadData();
     }
     render(){

@@ -8,3 +8,6 @@ class Article{
         this.filter=String();//filter for flatlist,when articles can have different type of story
     }
 }
+module.exports.getArticle = function(){
+    return new Article();
+};

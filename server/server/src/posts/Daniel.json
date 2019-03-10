@@ -1,12 +1,26 @@
 {
-  "posts":[
-    {
-      "id":0,
-      "key":"abcd",
-      "image":"",
-      "text":"hello",
-      "likes":[]
-    }
-  ],
-  "amount": 1
+ "posts": [
+  {
+   "id": 1,
+   "key": "7fjkzk1v7o",
+   "image": "http://catcut.net/1ulA",
+   "text": "424124",
+   "likes": []
+  },
+  {
+   "id": 2,
+   "key": "btxxcdihmv",
+   "image": "http://catcut.net/1ulA",
+   "text": "4324124",
+   "likes": []
+  },
+  {
+   "id": 3,
+   "key": "8ciha8csw5",
+   "image": "http://catcut.net/1ulA",
+   "text": "432412412341",
+   "likes": []
+  }
+ ],
+ "amount": 3
 }

@@ -7,3 +7,6 @@ class Post {
         this.likes=Array();//Array of strings. This is a list of users
     }
 }
+module.exports.getPost = function(){
+    return new Post();
+};

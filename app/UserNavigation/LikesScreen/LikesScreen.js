@@ -15,50 +15,26 @@ export default class LikesScreen extends React.Component {
         await this.setState({userData:JSON.parse(await AsyncStorage.getItem('currentUser:'))});
         this.setState({isRefreshing:false});
     };
-    _FilteringHistory= ()=>{
-        let array = this.state.userData.history;
-        let isFound=false;
-        for(let elem of array){
-            for(let post of this.state.userData.posts){
-                if(elem.id === post.id){
-                    isFound=true;
-                    break;
-                }
-            }
-            if(isFound === false){
-                   array.splice(array.indexOf(elem),1);
-            }
-            else{
-                isFound=false;
-            }
-
-        }
-        this.state.userData.history=array;
-        this.setState({userData:this.state.userData});
-        this._SaveUserData();
+    _PostDataHistory = async(username) => {
+      let data= {};
+      await fetch("http://10.0.2.2:3000/history?username="+username)
+          .then((response)=>{return response.json()
+          .then((responseJson)=>{
+              data=responseJson;
+          })});
+      return data;
     };
-    _LoadUserData = async () => {
-        let tempData = JSON.parse(await AsyncStorage.getItem('currentUser:'));
-
-        this.setState({userData:tempData});
-        this._FilteringHistory();
-        this.setState({isLoading:false});
+    _LoadUserHistory = async () => {
+        let user = JSON.parse(await AsyncStorage.getItem("currentUser:"));
+        this.setState({userData:user});
+        let history = await this._PostDataHistory(this.state.userData.username);
+        this.setState({userHistory:history.notifies,isLoading:false});
     };
-    _SaveUserData = async()=>{
-        try{
-            await AsyncStorage.setItem('user:'+this.state.userData.nickname,
-                JSON.stringify(this.state.userData));
-            await AsyncStorage.setItem('currentUser:',JSON.stringify(this.state.userData));
-        }
-        catch(except){
-            Alert.alert(except);
-        }
-    };
-
     constructor(props){
         super(props);
-        this.state={userData:{notifications:[]},isLoading:true,isRefreshing:false};
-        this._LoadUserData();
+        this._LoadUserHistory=this._LoadUserHistory.bind(this);
+        this.state={userData:{},isLoading:true,isRefreshing:false,userHistory:[]};
+        this._LoadUserHistory();
     }
     render(){
         if(!this.state.isLoading && !this.state.isRefreshing) {
@@ -74,7 +50,7 @@ export default class LikesScreen extends React.Component {
                     <View style={styles.border}>
                         <ScrollView style={styles.ScrollLikes}>
                             <FlatList
-                                data={this.state.userData.history}
+                                data={this.state.userHistory}
                                 renderItem={({item}) => (
                                     <Notify
                                         data={item}
@@ -86,9 +62,9 @@ export default class LikesScreen extends React.Component {
                                 }}
                                 refreshing={this.state.isRefreshing}
                                 onRefresh={this._RefreshOn}
-                                style={{minHeight:32}}
+                                style={{minHeight:16}}
                             />
-                            {this.state.userData.history.length===0 && <Text>Your history of notifications is empty!</Text>}
+                            {this.state.userHistory.length===0 && <Text>Your history of notifications is empty!</Text>}
                         </ScrollView>
                     </View>
                 </ImageBackground>

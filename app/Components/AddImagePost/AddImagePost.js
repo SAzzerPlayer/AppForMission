@@ -4,31 +4,20 @@ import {Overlay} from 'react-native-elements';
 import Post from '../../classes/Post';
 import styles from './Styles';
 export default class AddImagePost extends React.Component{
-    _AddPost = async () =>{
-        let post = new Post();
-        post.image=this.state.url;
-        post.text=this.state.text;
-        post.user=this.props.userData.nickname;
-        post.likes=0;
-        post.id=Date.now();
-        this.props.userData.posts.push(post.getObject());
-        try{
-            await AsyncStorage.setItem('user:'+this.props.userData.nickname,
-            JSON.stringify(this.props.userData));
-            await AsyncStorage.setItem('currentUser:',JSON.stringify(this.props.userData));
-            let global = JSON.parse(await AsyncStorage.getItem('global:'));
-            if(global==null){
-                global={posts:[]};
-            }
-            else if(global.posts === undefined){
-                global.posts=Array();
-            }
-            global['posts'].push(post.getObject());
-            await AsyncStorage.setItem('global:',JSON.stringify(global));
-        }
-        catch(exception){
-            Alert.alert('Wrong save post! ' + exception)
-        }
+
+    _PostDataAddImage = async (url,text) => {
+        await fetch('http://10.0.2.2:3000/posts/add', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: this.props.userData.username,
+                image: url,
+                text: text
+            }),
+        });
     };
     _CheckInputsField(){
         let regURL = /\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i;
@@ -36,12 +25,13 @@ export default class AddImagePost extends React.Component{
             Alert.alert('Invalid url format!');
         }
         else{
-            this._AddPost();
+            this._PostDataAddImage(this.state.url,this.state.text);
             this.props.prevComp.setState({isAddingPost:false});
         }
     }
     constructor(props){
         super(props); //UserData
+        this._CheckInputsField=this._CheckInputsField.bind(this);
         this.state={url:'',text:''};
     }
 

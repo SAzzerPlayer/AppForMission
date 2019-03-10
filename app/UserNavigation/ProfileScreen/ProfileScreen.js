@@ -7,26 +7,22 @@ import Loading2 from '../../Components/Loading/Loading-2';
 import styles from './ProfileStyles';
 import AddImagePost from "../../Components/AddImagePost/AddImagePost";
 
-
-
-
-
 export default class ProfileScreen extends React.Component {
     static navigationOptions={
         title:'Profile',
         header:null
     };
-    _LoadUserData=async()=>{
-        let temp=JSON.parse(await AsyncStorage.getItem('currentUser:'));
-        this.setState({userData:temp,isLoaded:true,isAddingPost:false});
-        return temp;
+
+    _LoadAppUser = async () => {
+        let datas = JSON.parse(await AsyncStorage.getItem("currentUser:"));
+        this.setState({userData:datas});
+        this.setState({isLoaded:true});
     };
     constructor(props){
         super(props);
-        this.state = { userData:{},isMultiplyPosts:false,isLoaded:false,isDeletingPost:false};
-        this._LoadUserData = this._LoadUserData.bind(this);
-
-        this._LoadUserData();
+        this.state = { userData:{},isMultiplyPosts:false,isLoaded:false,isDeletingPost:false,isAddingPost:false};
+        this._LoadAppUser = this._LoadAppUser.bind(this);
+        this._LoadAppUser();
     }
     _LogOut=()=>{
         Alert.alert(
@@ -53,12 +49,11 @@ export default class ProfileScreen extends React.Component {
                     <Header
                         leftComponent={{icon: 'menu', color: '#fff'}}
                         centerComponent={{text: 'Profile', style: {color: '#fff'}}}
-                        //rightComponent={{icon: 'settings', color: '#fff'}}
                         rightComponent={{icon: 'exit-to-app', color: '#fff',onPress:this._LogOut}}
                     />
                     <View style={styles.ProfUserContain}>
                         <View style={styles.AvatarContain}>
-                            <Image style={styles.AvatarImage} source={require('./materials/avatar.png')}/>
+                            <Image style={styles.AvatarImage} source={{uri:this.state.userData.avatar}}/>
                         </View>
                         <View style={styles.InfoUserContain}>
                             <View style={styles.NickUserContain}>
@@ -66,14 +61,11 @@ export default class ProfileScreen extends React.Component {
                                     <Icon name={'verified-user'}/>
                                 </View>
                                 <View style={styles.NickNameContain}>
-                                    <Text style={styles.NickNameText}>{this.state.userData['nickname']}</Text>
+                                    <Text style={styles.NickNameText}>{this.state.userData.username}</Text>
                                 </View>
                                 <View style={styles.EditProfileContain}>
                                     <TouchableHighlight onPress={()=>{
                                         this.props.navigation.navigate('EditProfile');
-                                        this.setState({isLoaded:false});
-                                        this.setState({isLoaded:true});
-
                                     }}>
                                         <Image style={styles.EditProfileImage} source={require('./materials/edit.png')}/>
                                     </TouchableHighlight>
@@ -84,7 +76,7 @@ export default class ProfileScreen extends React.Component {
                                     <Text style={styles.StaticsUserText}>
                                         Followers: {this.state.userData.subscribers.length} {"\n"}
                                         Subscribers: {this.state.userData.subscribe.length} {"   "}
-                                        {this.state.userData.posts.length}</Text>
+                                    </Text>
                                 </TouchableHighlight>
                             </View>
                         </View>
@@ -102,8 +94,8 @@ export default class ProfileScreen extends React.Component {
                             </View>
                             <View style={styles.ToolPostDeleteContain}>
                                 {(!this.state.isDeletingPost && <Image style={styles.ToolPostDeleteImage} source={require('./materials/delete_off.png')}/>)}
-                                {(this.state.isDeletingPost && <Image style={styles.ToolPostDeleteImage} source={require('./materials/delete_on.png')}/>)}
-                                <TouchableHighlight onPress={()=>{this.setState({isDeletingPost:!this.state.isDeletingPost, userData:this.state.userData})}}>
+                                {(this.state.isDeletingPost  && <Image style={styles.ToolPostDeleteImage} source={require('./materials/delete_on.png')}/>)}
+                                <TouchableHighlight onPress={()=>{this.setState({isDeletingPost:!this.state.isDeletingPost})}}>
                                 <Text style={styles.ToolPostDeleteText}>Delete post</Text>
                                 </TouchableHighlight>
                             </View>
@@ -122,9 +114,9 @@ export default class ProfileScreen extends React.Component {
                     </View>
                     <View style={styles.PostsContain}>
                         <ScrollView style={styles.ScrollPosts}>
-                            {(!this.state.isMultiplyPosts&& <ColumnListPosts userData={this.state.userData} deletingMode={this.state.isDeletingPost} extraData={this}/>)}
-                            {(this.state.isMultiplyPosts&& <TwiceColumnListPost userData={this.state.userData}/> )}
-                        </ScrollView>
+                            {(!this.state.isMultiplyPosts&& !this.state.isAddingPost && <ColumnListPosts userData={this.state.userData} deletingMode={this.state.isDeletingPost} extraData={this}/>)}
+                            {(this.state.isMultiplyPosts&& !this.state.isAddingPost && <TwiceColumnListPost userData={this.state.userData}/> )}
+                            </ScrollView>
                     </View>
                 </ImageBackground>
             )
@@ -136,15 +128,6 @@ export default class ProfileScreen extends React.Component {
         }
     }
 }
-{/*<OncePostOnRow userPosts={this.state.userData.posts}/>*/}
-{/*<View style={styles.MultiplyRowPostsContain}>*/}
-
-{/*</View>*/}
-{/*<Image style={styles.ShortPostImage} source={require('./materials/image.jpg')}/>*/}
-{/*<Image style={styles.ShortPostImage} source={require('./materials/image.jpg')}/>*/}
-//<Image style={styles.ToolPostViewModeSwitch} source={require('./materials/switch.png')}/
-
-{/*<View style={styles.ToolPostEditContain}>*/}
-    {/*<Image style={styles.ToolPostEditImage} source={require('./materials/add.png')}/>*/}
-    {/*<Text style={styles.ToolPostEditText}>Add post</Text>*/}
-{/*</View>*/}
+// {(!this.state.isMultiplyPosts&& <ColumnListPosts userData={this.state.userData} deletingMode={this.state.isDeletingPost} extraData={this}/>)}
+// {(!this.state.isMultiplyPosts&& <TwiceColumnListPost userData={this.state.userData}/> )}
+//
