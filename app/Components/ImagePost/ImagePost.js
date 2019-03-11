@@ -8,6 +8,8 @@ export default class ImagePost extends React.Component{
     constructor(props){
         super(props);
         this._CheckPhotoIsLiked = this._CheckPhotoIsLiked.bind(this);
+        this._LikePost=this._LikePost.bind(this);
+        this._BreakLikePost=this._BreakLikePost.bind(this);
         this.state={isLiked:this._CheckPhotoIsLiked(),isDeleting:false};
     }
     _CheckPhotoIsLiked = () => {
@@ -49,6 +51,44 @@ export default class ImagePost extends React.Component{
             {cancelable:false}
         )
     };
+    _PostNewNotification = async (key,user) => {
+        await fetch('http://10.0.2.2:3000/notifies/new', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                byUser: user,
+                key: key,
+                type: 'like',
+                toUser: user
+            }),
+        });
+    };
+    _LikePost = () => {
+        this._PostNewNotification(this.props.data.key,this.props.userData.username);
+        this.setState({isLiked:true});
+    };
+    _PostDeleteNotification = async (key,user) => {
+        await fetch('http://10.0.2.2:3000/notifies/delete', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                byUser:user,
+                toUser:user,
+                key:key,
+                type:"like"
+            }),
+        });
+    };
+    _BreakLikePost = () => {
+        this._PostDeleteNotification(this.props.data.key, this.props.userData.username);
+        this.setState({isLiked: false});
+    };
     render(){
         if(!this.state.isDeleting) {
             return (
@@ -81,15 +121,15 @@ export default class ImagePost extends React.Component{
                     <View style={styles.PostBottomContain}>
                         <View style={styles.PostBottomLeftContain}>
                             <View>
-                                {(this.state.isLiked === false && <TouchableHighlight
+                                {(!this.state.isLiked && <TouchableHighlight
                                     style={styles.PostBottomLikeTouchable}
-                                    onPress={this._isNotLikedPost}
+                                    onPress={this._LikePost}
                                 >
                                     <Image style={styles.PostLikeIconImage} source={require('./materials/heart.png')}/>
                                 </TouchableHighlight>)}
-                                {(this.state.isLiked === true && <TouchableHighlight
+                                {(this.state.isLiked && <TouchableHighlight
                                     style={styles.PostBottomLikeTouchable}
-                                    onPress={this._isLikedPost}
+                                    onPress={this._BreakLikePost}
                                 >
                                     <Image style={styles.PostLikeIconImage}
                                            source={require('./materials/hearton.png')}/>

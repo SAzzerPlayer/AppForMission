@@ -10,12 +10,12 @@ export default class LikesScreen extends React.Component {
         title: 'Likes',
         header: null
     };
-    _RefreshOn=async()=>{
-        this.setState({isRefreshing:true});
-        await this.setState({userData:JSON.parse(await AsyncStorage.getItem('currentUser:'))});
+    _RefreshOn=()=>{
+        this.setState({isRefreshing:true,isLoading:true});
+        this._LoadUserHistory();
         this.setState({isRefreshing:false});
     };
-    _PostDataHistory = async(username) => {
+    _GetDataHistory = async(username) => {
       let data= {};
       await fetch("http://10.0.2.2:3000/history?username="+username)
           .then((response)=>{return response.json()
@@ -24,15 +24,28 @@ export default class LikesScreen extends React.Component {
           })});
       return data;
     };
+    _PostClearHistory = async () => {
+        await fetch('http://10.0.2.2:3000/history/clean', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username:this.state.userData.username
+            }),
+        });
+    };
     _LoadUserHistory = async () => {
         let user = JSON.parse(await AsyncStorage.getItem("currentUser:"));
         this.setState({userData:user});
-        let history = await this._PostDataHistory(this.state.userData.username);
+        let history = await this._GetDataHistory(this.state.userData.username);
         this.setState({userHistory:history.notifies,isLoading:false});
     };
     constructor(props){
         super(props);
         this._LoadUserHistory=this._LoadUserHistory.bind(this);
+        this._PostClearHistory=this._PostClearHistory.bind(this);
         this.state={userData:{},isLoading:true,isRefreshing:false,userHistory:[]};
         this._LoadUserHistory();
     }
@@ -45,7 +58,10 @@ export default class LikesScreen extends React.Component {
                     <Header
                         leftComponent={{icon: 'menu', color: '#fff'}}
                         centerComponent={{text: 'Likes', style: {color: '#fff'}}}
-                        rightComponent={{icon: 'content-paste', color: '#fff'}}
+                        rightComponent={{icon: 'content-paste', color: '#fff',onPress: ()=>{
+                            this._PostClearHistory();
+                            this._RefreshOn();
+                        }}}
                     />
                     <View style={styles.border}>
                         <ScrollView style={styles.ScrollLikes}>
@@ -58,7 +74,7 @@ export default class LikesScreen extends React.Component {
                                     />
                                 )}
                                 keyExtractor={(item) => {
-                                    return item.id;
+                                    return item.key;
                                 }}
                                 refreshing={this.state.isRefreshing}
                                 onRefresh={this._RefreshOn}

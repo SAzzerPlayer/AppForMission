@@ -1,9 +1,53 @@
 import React from 'react';
-import {AsyncStorage,Alert,View,Image,Text,TextInput,TouchableHighlight} from 'react-native';
+import {Platform,Alert,View,Image,Text,TextInput,TouchableHighlight} from 'react-native';
 import {Overlay} from 'react-native-elements';
-import Post from '../../classes/Post';
+import ImagePicker from 'react-native-image-picker';
 import styles from './Styles';
+
+const createFormData = (photo, body) => {
+    const data = new FormData();
+
+    data.append("photo", {
+        name: photo.fileName,
+        type: photo.type,
+        uri:
+            Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+    });
+
+    Object.keys(body).forEach(key => {
+        data.append(key, body[key]);
+    });
+
+    return data;
+};
 export default class AddImagePost extends React.Component{
+
+    handleUploadPhoto = () => {
+        fetch("http://10.0.2.2:3000/image/upload", {
+            method: "POST",
+            body: createFormData(this.state.photo, { username:this.props.userData.username })
+        })
+            .then(response => response.json())
+            .then(response => {
+                console.log("upload success", response);
+                alert("Upload success!");
+                this.setState({ photo: null });
+            })
+            .catch(error => {
+                console.log("upload error", error);
+                alert("Upload failed!");
+            });
+    };
+    handleChoosePhoto = () => {
+        const options={noData:true};
+        ImagePicker.launchImageLibrary(options,response => {
+            if(response.uri){
+                Alert.alert(response.uri);
+                this.setState({photo:response,url:response});
+                this.handleUploadPhoto();
+            }
+        })
+    };
 
     _PostDataAddImage = async (url,text) => {
         await fetch('http://10.0.2.2:3000/posts/add', {
@@ -20,19 +64,19 @@ export default class AddImagePost extends React.Component{
         });
     };
     _CheckInputsField(){
-        let regURL = /\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i;
-        if(this.state.url.match(regURL)==null){
-            Alert.alert('Invalid url format!');
-        }
-        else{
+        //let regURL = /\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i;
+        //if(this.state.url.match(regURL)==null){
+        //    Alert.alert('Invalid url format!');
+        //}
+        //else{
             this._PostDataAddImage(this.state.url,this.state.text);
             this.props.prevComp.setState({isAddingPost:false});
-        }
+        //}
     }
     constructor(props){
         super(props); //UserData
         this._CheckInputsField=this._CheckInputsField.bind(this);
-        this.state={url:'',text:''};
+        this.state={url:'',text:'',photo:null};
     }
 
     render(){
@@ -50,7 +94,13 @@ export default class AddImagePost extends React.Component{
                         <Image style={styles.TitleCloseImage} source={require('./materials/close.png')}/>
                     </TouchableHighlight>
                 </View>
-                <Text style={styles.TextSecondTitle}>URL link of photo:</Text>
+                <View style={{maxHeight:48,justifyContent: `center`,
+                    flexDirection: `column`}}>
+                    <Text style={styles.TextSecondTitle}>URL link of photo:</Text>
+                    <TouchableHighlight onPress={this.handleChoosePhoto}>
+                        <Image style={{height:32,width:32}} source={require('./materials/gallery.png')}/>
+                    </TouchableHighlight>
+                </View>
                 <View style={styles.TextInputContain}>
                     <TextInput
                         style={styles.TextInput}

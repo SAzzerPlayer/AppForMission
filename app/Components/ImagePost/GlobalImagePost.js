@@ -4,112 +4,117 @@ import styles from './Styles';
 import Notify from '../../classes/Notify';
 
 export default class GlobalImagePost extends React.Component{
-    _LoadUserData = async() =>{
-        let data=await AsyncStorage.getItem('user:'+this.props.data.user);
-        this.setState({userData:data,isLoading:false})
+
+    _GetUserData = async () => {
+        let data={};
+        await fetch("http://10.0.2.2:3000/users?username="+this.state.ownerPost)
+            .then((response)=>{return response.json()
+                .then((responseJson)=>{
+                    data = responseJson;
+                })});
+        this.setState({ownerData:data});
+        this._CheckPhotoIsLiked();
+    };
+    _CheckPhotoIsLiked = () => {
+        for(let element of this.state.postData.likes){
+            if(element === this.props.currentUser.username){
+                this.setState({isLiked:true});
+                break;
+            }
+        }
+        this.setState({isLoading:false});
     };
     constructor(props){
+        // currentUser - the data of current user
+        // userData - the data of owner of this post
         super(props);
-        let isLiked=false;
-        this.state={isLikedByCurrentUser:false,isLoading:true,userData:{}};
-        this._LoadUserData();
-        //for(let notify of this.state.userData.notifications){
-        //    if(notify.post === this.props.item.id){
-        //        isLiked=true;
-        //        break;
-        //   }
-        //}
-        //this.setState({isLikedByCurrentUser:isLiked});
-        /*Alert.alert(this.state.userData.nickname+' '+
-        +this.state.userData.avatar+ ' '+
-            +this.state.userData+
-        +this.props.item.user);*/
+        this._GetUserData=this._GetUserData.bind(this);
+        this._CheckPhotoIsLiked=this._CheckPhotoIsLiked.bind(this);
+        this.state={isLoading:true,isJoined:false,postData:this.props.data.post,ownerPost:this.props.data.username,ownerData:{},isLiked:false};
+        this._GetUserData();
 
     }
-    _SaveData = async()=>{
-        try{
-            await AsyncStorage.setItem('user:'+this.state.userData.nickname,
-                JSON.stringify(this.props.userData));
-            await AsyncStorage.setItem('currentUser:',JSON.stringify(this.state.userData));
-        }
-        catch(exception){
-            Alert.alert('Wrong save post! ' + exception)
-        }
-    };
 
-    _isLikedPost=()=>{
-        //for(let elem of this.state.userData.notifications){
-        //    if(elem.post === this.props.item.id){
-        //        this.state.userData.notifications.splice(this.state.userData.notifications.indexOf(elem),1);
-        //        break;
-         //   }
-        //}
-        //for(let elem of this.state.userData.history){
-        //    if(elem.post === this.props.item.id){
-        //        this.state.userData.history.splice(this.state.userData.history.indexOf(elem),1);
-        //        break;
-        //    }
-        //}
-        this.props.item.likes-=1;
-        this.props.extraData.setState({userData:this.state.userData});
-        this._SaveData();
-        this.setState({isLikedByCurrentUser:false});
+    _PostNewNotification = async (key,byUser,toUser) => {
+        await fetch('http://10.0.2.2:3000/notifies/new', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                byUser: byUser,
+                key: key,
+                type: 'like',
+                toUser: toUser
+            }),
+        });
     };
-    _isNotLikedPost=()=>{
-        let note = new Notify();
-        note.id=Date.now();
-        note.fromUser=this.props.userData.nickname;
-        note.post=this.props.data.id;
-        note.type='like';
-        note.date=new Date();
-        this.state.userData.notifications.push(note.getObject());
-        this.state.userData.history.push(note.getObject());
-        this.state.item.likes+=1;
-        this.props.extraData.setState({userData:this.props.userData});
-        this._SaveData();
-        this.setState({isLikedByCurrentUser:true});
+    _LikePost = () => {
+        this._PostNewNotification(this.state.postData.key,this.props.currentUser.username,this.state.ownerPost);
+        this.setState({isLiked:true});
+    };
+    _PostDeleteNotification = async (key,byUser,toUser) => {
+        await fetch('http://10.0.2.2:3000/notifies/delete', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                byUser:byUser,
+                toUser:toUser,
+                key:key,
+                type:"like"
+            }),
+        });
+    };
+    _BreakLikePost = () => {
+        this._PostDeleteNotification(this.state.postData.key, this.props.currentUser.username,this.state.ownerPost);
+        this.setState({isLiked: false});
     };
     render(){
         if(!this.state.isLoading) {
             return (
                 <View style={styles.PostUserContain}>
                     <View style={styles.InfoUserContain}>
-                        <Image style={styles.AvatarUserImage} source={{uri: this.state.userData.avatar}}/>
+                        <Image style={styles.AvatarUserImage} source={{uri: this.state.ownerData.avatar}}/>
                         <View style={styles.InfoUserNickNameContain}>
                             <Text style={styles.InfoUserNickNameText}>
-                                {this.state.userData.nickname}
+                                {this.state.ownerData.username}
                             </Text>
                         </View>
-                        {(!this.props.isCurrentUser &&
-                            <View style={styles.InfoIconJoinContain}>
+                            {(!this.state.isJoined && <View style={styles.InfoIconJoinContain}>
                                 <Image style={styles.InfoIconJoinImage} source={require('./materials/join.png')}/>
                             </View>)}
+                        {(this.state.isJoined && <View>
+
+                            </View>
+                            )}
                         <View style={styles.InfoJoinContain}>
-                            {(!this.props.isCurrentUser && <Text style={styles.InfoJoinText}>
+                            {(!this.state.isJoined && <Text style={styles.InfoJoinText}>
                                 Join
                             </Text>)}
-                            {(this.props.isDeletingPost &&
-                                <TouchableHighlight onPress={this._DeletingProcess}>
-                                    <Image style={{width: 32, height: 32}} source={require('./materials/close.png')}/>
-                                </TouchableHighlight>
-                            )}
+                            {(this.state.isJoined && <View>
+
+                            </View>)}
                         </View>
                     </View>
                     <View style={styles.PostImageContain}>
-                        <Image style={styles.PostImage} source={{uri: this.props.item.image}}/>
+                        <Image style={styles.PostImage} source={{uri: this.state.postData.image}}/>
                     </View>
                     <View style={styles.PostBottomContain}>
                         <View style={styles.PostBottomLeftContain}>
                             <View>
-                                {(this.state.isLikedByCurrentUser === false && <TouchableHighlight
+                                {(!this.state.isLiked && <TouchableHighlight
                                     style={styles.PostBottomLikeTouchable}
-                                    onPress={this._isNotLikedPost}
+                                    onPress={this._LikePost}
                                 >
                                     <Image style={styles.PostLikeIconImage} source={require('./materials/heart.png')}/>
                                 </TouchableHighlight>)}
-                                {(this.state.isLikedByCurrentUser === true && <TouchableHighlight
+                                {(this.state.isLiked && <TouchableHighlight
                                     style={styles.PostBottomLikeTouchable}
-                                    onPress={this._isLikedPost}
+                                    onPress={this._BreakLikePost}
                                 >
                                     <Image style={styles.PostLikeIconImage}
                                            source={require('./materials/hearton.png')}/>
@@ -117,23 +122,22 @@ export default class GlobalImagePost extends React.Component{
                             </View>
                             <View style={styles.PostBottomAmmoLikesContain}>
                                 <Text style={styles.PostBottomAmmoLikesText}>
-                                    {this.props.item.likes}
+                                    {this.state.postData.likes.length}
                                 </Text>
                             </View>
                         </View>
                         <View style={styles.PostBottomRightContain}>
                             <TouchableWithoutFeedback style={styles.PostBottomRightTouch}>
                                 <Text style={styles.PostBottomRightText}>
-                                    {this.props.item.text}
+                                    {this.state.postData.text}
                                 </Text>
                             </TouchableWithoutFeedback>
-
                         </View>
                     </View>
                 </View>
             );
         }
-        else return (<View><Text>11</Text></View>);
+        else return (<View></View>);
     }
 }
 
