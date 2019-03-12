@@ -1,0 +1,14 @@
+{
+ "posts": [
+  {
+   "id": 1,
+   "key": "93bgn49n8g",
+   "image": "http://10.0.2.2:3000/image?filename=IMG_20190311_221159.jpg",
+   "text": ";lfkwefksapok",
+   "likes": [
+    "Krushok"
+   ]
+  }
+ ],
+ "amount": 1
+}

@@ -90,6 +90,16 @@ const PostMethods = {
             console.log(data);
             for(let element of data.posts){
                 if(element.key === temp.key){
+                    if(element.image.includes("10.0.2.2:3000")){
+                        let filename = element.image.split("filename=")[1];
+                        for(let file of fs.readdirSync(__dirname+"/src/images/")){
+                            if(file.includes(filename)){
+                                fs.unlinkSync(__dirname+'/src/images/'+file);
+                                break;
+                            }
+                        }
+
+                    }
                     data.posts.splice(data.posts.indexOf(element),1);
                     data.amount-=1;
                     break;
@@ -454,9 +464,21 @@ const GetMethods = {
     GetDefault: (request,response)=>{
         response.send("ROOT");
     },
-    GetDefaultImage: (request,response)=>{
-        let path=__dirname+"/src/default/image.jpg";
-        response.sendFile(path);
+    GetImage: (request,response)=>{
+        let source_path = request.query.filename || false;
+        console.log("Sending image");
+        console.log(request.query.filename);
+        let list = fs.readdirSync(__dirname+"/src/images/");
+        let isSearched=false;
+        for(let element of list){
+            if(element.includes(source_path)){
+                response.sendFile(__dirname+"/src/images/"+element);
+                isSearched=true;
+                break;
+            }
+        }
+        if(!isSearched) response.sendfile(__dirname+"/src/images/default.jpg");
+        //response.sendFile(source_path);
     }
 };
 app.use((request,response,next)=>{
@@ -476,8 +498,9 @@ app.post("/notifies/new",jsonParser,PostMethods.PostNewNotify);
 app.post("/notifies/delete",jsonParser,PostMethods.PostDeleteNotify);
 app.get("/history",GetMethods.GetHistory);
 app.post("/history/clean",jsonParser,PostMethods.PostClearHistory);
-//app.post('/image/upload', upload.array('photo', 3),PostMethods.PostUploadImage);
-app.post('/image/upload',urlencodedParser,PostMethods.PostUploadImage);
+app.post('/image/upload', upload.array('photo', 3),PostMethods.PostUploadImage);
+//app.post('/image/upload',urlencodedParser({limit:'10mb',extended:true}),PostMethods.PostUploadImage);
+app.get("/image",GetMethods.GetImage);
 app.get("/",GetMethods.GetDefault);
 app.listen(3000);
 

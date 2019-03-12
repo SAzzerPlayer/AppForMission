@@ -1,4 +1,29 @@
 {
- "amount": 0,
- "notifies": []
+ "amount": 3,
+ "notifies": [
+  {
+   "id": 1,
+   "key": "e6qa683h8b",
+   "type": "like",
+   "date": 1552397639498,
+   "text": "",
+   "byUser": "Jack"
+  },
+  {
+   "id": 2,
+   "key": "2dgum8a4xj",
+   "type": "like",
+   "date": 1552397641866,
+   "text": "",
+   "byUser": "Jack"
+  },
+  {
+   "id": 3,
+   "key": "e6qa683h8b",
+   "type": "like",
+   "date": 1552398591021,
+   "text": "",
+   "byUser": "Krushok"
+  }
+ ]
 }

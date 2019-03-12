@@ -25,6 +25,7 @@ export default class LikesScreen extends React.Component {
       return data;
     };
     _PostClearHistory = async () => {
+        Alert.alert("History has cleaned.");
         await fetch('http://10.0.2.2:3000/history/clean', {
             method: 'POST',
             headers: {

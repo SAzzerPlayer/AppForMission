@@ -10,8 +10,8 @@ const createFormData = (photo, body) => {
     data.append("photo", {
         name: photo.fileName,
         type: photo.type,
-        uri:
-            Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+        uri: photo.uri
+            //Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
     });
 
     Object.keys(body).forEach(key => {
@@ -41,10 +41,10 @@ export default class AddImagePost extends React.Component{
     handleChoosePhoto = () => {
         const options={noData:true};
         ImagePicker.launchImageLibrary(options,response => {
-            if(response.uri){
-                Alert.alert(response.uri);
-                this.setState({photo:response,url:response});
+            if(response){
+                this.setState({photo:response,url:"http://10.0.2.2:3000/image?filename="+response.fileName});
                 this.handleUploadPhoto();
+
             }
         })
     };
@@ -64,14 +64,14 @@ export default class AddImagePost extends React.Component{
         });
     };
     _CheckInputsField(){
-        //let regURL = /\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i;
-        //if(this.state.url.match(regURL)==null){
-        //    Alert.alert('Invalid url format!');
-        //}
-        //else{
+        let regURL = /\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i;
+        if(this.state.url.match(regURL)==null){
+           Alert.alert('Invalid url format!');
+        }
+        else{
             this._PostDataAddImage(this.state.url,this.state.text);
             this.props.prevComp.setState({isAddingPost:false});
-        //}
+        }
     }
     constructor(props){
         super(props); //UserData
@@ -97,7 +97,7 @@ export default class AddImagePost extends React.Component{
                 <View style={{maxHeight:48,justifyContent: `center`,
                     flexDirection: `column`}}>
                     <Text style={styles.TextSecondTitle}>URL link of photo:</Text>
-                    <TouchableHighlight onPress={this.handleChoosePhoto}>
+                    <TouchableHighlight  style={{height:32,width:32}} onPress={this.handleChoosePhoto}>
                         <Image style={{height:32,width:32}} source={require('./materials/gallery.png')}/>
                     </TouchableHighlight>
                 </View>

@@ -2,11 +2,58 @@ import React from 'react';
 import {View,Text,ScrollView,Image,ImageBackground,TouchableHighlight,TextInput,AsyncStorage,Alert} from 'react-native';
 import Loading from '../../../Components/Loading/Loading-2'
 import styles from './Styles';
+import ImagePicker from "react-native-image-picker";
+
+const createFormData = (photo, body) => {
+    const data = new FormData();
+
+    data.append("photo", {
+        name: photo.fileName,
+        type: photo.type,
+        uri: photo.uri
+        //Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+    });
+
+    Object.keys(body).forEach(key => {
+        data.append(key, body[key]);
+    });
+
+    return data;
+};
 
 export default class EditProfileScreen extends React.Component{
     static navigationOptions = {
         title:'EditProfile'
     };
+    ///////////////////////////////
+    handleUploadPhoto = () => {
+        fetch("http://10.0.2.2:3000/image/upload", {
+            method: "POST",
+            body: createFormData(this.state.photo, { username:this.state.userData.username })
+        })
+            .then(response => response.json())
+            .then(response => {
+                console.log("upload success", response);
+                alert("Upload success!");
+                this.setState({ photo: null });
+            })
+            .catch(error => {
+                console.log("upload error", error);
+                alert("Upload failed!");
+            });
+    };
+    handleChoosePhoto = () => {
+        const options={noData:true};
+        ImagePicker.launchImageLibrary(options,response => {
+            if(response){
+                this.setState({photo:response,url:"http://10.0.2.2:3000/image?filename="+response.fileName});
+                this.handleUploadPhoto();
+
+            }
+        })
+    };
+
+    ///////////////////////////////
     _LoadData = async () => {
         let tempData = JSON.parse(await AsyncStorage.getItem('currentUser:'));
         this.setState({userData:tempData, isLoaded:true});
@@ -149,10 +196,14 @@ export default class EditProfileScreen extends React.Component{
                                     style={{
                                         flex: 1,
                                         alignItems: `center`,
-                                        justifyContent: `space-around`,
+                                        justifyContent: `space-between`,
                                         flexDirection: `row`
                                     }}
                                 >
+                                    <TouchableHighlight onPress={this.handleChoosePhoto}>
+                                    <Image style={styles.Avatar}
+                                           source={require('./materials/galleryfrom.png')}/>
+                                    </TouchableHighlight>
                                     <TextInput
                                         style={styles.TextInputStyle}
                                         placeholder={`URL-link...`}
@@ -162,7 +213,8 @@ export default class EditProfileScreen extends React.Component{
                                     <TouchableHighlight
                                         style={{
                                             alignItems: `center`,
-                                            justifyContent: `center`
+                                            justifyContent: `center`,
+                                            marginRight: 35
                                         }}
                                         onPress={()=>{
                                             this._CheckURL();

@@ -1,0 +1,37 @@
+{
+ "posts": [
+  {
+   "username": "Jack",
+   "post": {
+    "id": 1,
+    "key": "93bgn49n8g",
+    "image": "http://10.0.2.2:3000/image?filename=IMG_20190311_221159.jpg",
+    "text": ";lfkwefksapok",
+    "likes": [
+     "Krushok"
+    ]
+   }
+  },
+  {
+   "username": "Krushok",
+   "post": {
+    "id": 1,
+    "key": "3d9wxs7g5x",
+    "image": "http://10.0.2.2:3000/image?filename=4_fraktal3608ab310dc594c738706a02f4962899f.jpg",
+    "text": "31231",
+    "likes": []
+   }
+  },
+  {
+   "username": "Krushok",
+   "post": {
+    "id": 2,
+    "key": "f2483k456r",
+    "image": "http://10.0.2.2:3000/image?filename=4_fraktal3608ab310dc594c738706a02f4962899f.jpg",
+    "text": "31231",
+    "likes": []
+   }
+  }
+ ],
+ "amount": 3
+}

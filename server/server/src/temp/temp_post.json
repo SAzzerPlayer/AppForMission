@@ -1,0 +1,15 @@
+{
+ "isSearched": true,
+ "amount": 3,
+ "list": [],
+ "element": {
+  "id": 6,
+  "key": "e6qa683h8b",
+  "image": "http://10.0.2.2:3000/image?filename=IMG_20190311_221540.jpg",
+  "text": "214124124",
+  "likes": [
+   "Jack",
+   "Krushok"
+  ]
+ }
+}

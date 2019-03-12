@@ -22,7 +22,8 @@ export default styles = StyleSheet.create({
         textAlign: `center`
     },
     TextInputStyle:{
-        fontSize: 14
+        fontSize: 14,
+        maxWidth:150
     },
     TextStylePress:{
         fontSize: 20,

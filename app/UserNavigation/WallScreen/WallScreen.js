@@ -58,6 +58,7 @@ export default class WallScreen extends React.Component {
                                     extraData={this}
                                 />
                             )}
+                            style={{minHeight:16}}
                             keyExtractor={(item)=>{return item.post.key}}
                             refreshing={this.state.isRefreshing}
                             onRefresh={this._OnRefresh}
@@ -66,6 +67,6 @@ export default class WallScreen extends React.Component {
                 </ImageBackground>
             )
         }
-        else return(<View><Text>2222</Text></View>);
+        else return(<Loading/>);
     }
 }
